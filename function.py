@@ -7,20 +7,8 @@ Current_Carbs=(0)
 #list day tracker
 today=[]
 
-# defining food class
-class food:
-    def __init__(self,name,calories,protein,fats,carbs):
-        self.name=name
-        self.calories=calories
-        self.protein=protein
-        self.fats=fats
-        self.carbs=carbs
-    #print descriptions of food item
-    def Print_Food(self):
-        print(self.name,self.calories,self.protein,self.fats,self.carbs)
-
-#function for adding food
-def Food_Addition(Current_Calorie,Current_Protein,Current_Fats,Current_Carbs):
+#function for adding food text based
+def Food_Addition_Text(Current_Calorie,Current_Protein,Current_Fats,Current_Carbs):
     #details about new tracked item
         New_Name=input("Enter name of food: ")
         New_Calories=float(input("Enter calories:   "))
