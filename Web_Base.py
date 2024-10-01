@@ -46,7 +46,7 @@ def before_request():
 #defining home page and route
 @app.route('/',methods=['POST','GET'])
 def home():
-    return render_template('home.html')
+    return render_template('home.js')
 
 #defining addition page and route
 @app.route('/Add_Food',methods=['POST','GET'])
@@ -61,24 +61,49 @@ def Food_Add_Page():
     #instantiating new object form class
         New_Name=food(New_Name,New_Calories,New_Protein,New_Fats,New_Carbs)
         session['today'].append(New_Name.to_dict())
-        print(session['today'])
     #updating variables
         session['Current_Calorie']+=New_Calories
         session['Current_Protein']+=New_Protein
         session['Current_Fats']+=New_Fats
         session['Current_Carbs']+=New_Carbs
+    #redirect and flashed message to home page
+        flash("Food added successfully")
         return redirect('/')
     return render_template('Food_Addition.html')
 
 #defining removal page and route
 @app.route('/Remove_Food',methods=['POST','GET'])
 def Food_Remove_Page():
+    if request.method=="POST":
+    #checking if list is empty
+        length=len(session['today'])
+        if length<1:
+            message=("List is empty, add a food item")
+            redirect('Remove_Food', message=message)
+    #if list not empty then take input    
+        else:
+            Remove_Item=request.form['name']
+    #loops through list and removes inputted item
+            for food_item in session['today']:
+                if food_item['name']==Remove_Item:
+                    session['today'].remove(food_item)
+    #updating variables
+        session['Current_Calorie']-=food_item['calories']
+        session['Current_Protein']-=food_item['protein']
+        session['Current_Fats']-=food_item['fats']
+        session['Current_Carbs']-=food_item['carbs']
+        return redirect('/')
     return render_template('Food_Removal.html')
 
 #defining check page and route
 @app.route('/Check_Food',methods=['POST','GET'])
 def Food_Check_Page():
-    return render_template('Food_Check.html')
+    if session['today']==[]:
+        flash("No food added today")
+        return redirect('/')
+    else:
+        display=session['today']
+        return render_template('Food_Check.html',display=display)
 
 #initialise the loop to set up website
 if __name__=="__main__":
